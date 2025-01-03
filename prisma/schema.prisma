@@ -1,0 +1,104 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id String @id @default(cuid())
+
+    firstName    String
+    lastName     String
+    email        String
+    password     String
+    profileImage String?
+    gender       Genders
+    role         UserRoles
+
+    // All Relations
+    courses Course[]
+
+    isDeleted Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Course {
+    id                String  @id @default(cuid())
+    courseName        String
+    courseDescription String?
+    courseScore       String
+    thumbnailImage    String?
+    isPublished       String
+
+    // Relation
+
+    courseUsers User[]
+
+    // Course To Lessons
+    courseLessons CourseLessons[]
+
+    isDeleted Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model CourseLessons {
+    id         String @id @default(cuid())
+    lessonName String
+
+    sequenceNumber Int
+    isCompleted    Boolean @default(false)
+
+    //  Lessons To Course
+    courseId String?
+    Course   Course? @relation(fields: [courseId], references: [id])
+
+    //  CourseLessons To LessonContents
+    LessonContents LessonContents[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([courseId, sequenceNumber])
+}
+
+model LessonContents {
+    id             String   @id @default(cuid())
+    contentName    String
+    contentType    Contents
+    resourceLink   String
+    sequenceNumber Int
+    isCompleted    Boolean  @default(false)
+
+    //  Lessons To Course
+    courseLessonId String?
+    CourseLessons  CourseLessons? @relation(fields: [courseLessonId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([courseLessonId, sequenceNumber])
+}
+
+enum UserRoles {
+    CourseUser
+    Admin
+}
+
+enum Genders {
+    Male
+    Female
+    Other
+}
+
+enum Contents {
+    Video
+    Audio
+    PDF
+}
