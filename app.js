@@ -16,6 +16,7 @@ app.use("/test", function (req, res, next) {
     res.send(`<html><body><h1>Server Started</h1></body></html>`);
 });
 
+
 app.use("/", routes);
 
 app.use(errorMiddleware);

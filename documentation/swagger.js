@@ -2,75 +2,42 @@ const config = require(`../helper/config/config`);
 
 
 // ---------------------- Import Docs From Content Folder --------------------------
+const authDoc = require(`./content/auth.doc`);
 
-const studentDoc = require(`./content/student.doc`);
-const adminDoc = require(`./content/admin.doc`);
-const coursesDoc = require(`./content/courses.doc`);
-const skillDoc = require(`./content/skill.doc`);
-const mentorDoc = require(`./content/mentor.doc`);
-const projectDoc = require(`./content/project.doc`);
-const residencyDoc = require(`./content/residency.doc`);
-const recordedSessionDoc = require(`./content/recordSession.doc`);
-const liveSessionDoc = require(`./content/liveSessions.doc`);
+
 
 
 
 // ---------------------- Swagger --------------------------
-
-module.exports ={
-    swagger : "2.0",
-    ifno :{
-        version : "1.0.0",
-        title : "Makers Asylum Application",
-        description : "Learning Management System Application's API",
-        licenece :{
-            name :"MIT",
-            url: "https://opensource.org/licenses/MIT"
-        }
+const swaggerDocument = {
+    openapi: "3.0.0",
+    info: {
+        title: "Delta",
+        version: "1.0.0",
+        description: "APIs for Delta",
     },
-    host : config.SWAGGERPORT,
-    basePath : "/",
-    schemes : [`http`],
-    consumes : [`application/json`],
-    produces : [`application/json`],
-    tages: [
-        //Optional
+    servers: [
+        {
+            url: "http://localhost:8888/",
+            description: "Local server",
+        },
     ],
-
     // -------- Security definations ---------------
-    securityDefinitions : {
-        JWT : {
-            type : "apiKey",
-            name : "Authorization",
-            in :"header"
-        }
+    securityDefinitions: {
+        JWT: {
+            type: "apiKey",
+            name: "Authorization",
+            in: "header",
+        },
     },
+    definations: {
+        ...authDoc.definitions,
 
-
-    // ----------- Definations -----------------------
-
-    defination : {
-        ...studentDoc.defination,
-        ...adminDoc.defination,
-        ...coursesDoc.defination,
-        ...skillDoc.defination,
-        ...mentorDoc.defination,
-        ...projectDoc.defination,
-        ...residencyDoc.defination,
-        ...recordedSessionDoc.defination,
-        ...liveSessionDoc.defination
     },
+    paths: {
+        ...authDoc.paths,
 
-    // ----------- Pahts ------------------------------
-    paths : {
-        ...studentDoc.path,
-        ...adminDoc.path,
-        ...coursesDoc.path,
-        ...skillDoc.path,
-        ...mentorDoc.path,
-        ...projectDoc.path,
-        ...residencyDoc.path,
-        ...recordedSessionDoc.path,
-        ...liveSessionDoc.path   
-    }
+    },
 };
+
+module.exports = swaggerDocument;
