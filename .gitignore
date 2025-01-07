@@ -7,3 +7,4 @@
 .env.test.local
 .env.production.local
 .env.local
+/prisma/seed.js
