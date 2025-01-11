@@ -19,7 +19,33 @@ model User {
     role         UserRoles
 
     // All Relations
+
     courses Course[]
+
+    clubCourses ClubCourse[]
+
+    isDeleted Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model ClubCourse {
+    id                    String  @id @default(cuid())
+    clubCourseName        String
+    clubCourseDescription String
+    thumbnailImage        String?
+    isPublished           Boolean @default(false)
+    isFree                Boolean @default(false)
+
+    //  Club Course To Course
+    courses Course[]
+
+    // Club Course To User
+    users User[]
+
+    // ClubCourses to categories
+    categories CourseCategories[]
 
     isDeleted Boolean @default(false)
 
@@ -33,7 +59,8 @@ model Course {
     courseDescription String?
     courseScore       String
     thumbnailImage    String?
-    isPublished       String
+    isPublished       Boolean @default(false)
+    isFree            Boolean @default(false)
 
     // Relation
 
@@ -41,6 +68,12 @@ model Course {
 
     // Course To Lessons
     courseLessons CourseLessons[]
+
+    // Course To Club Course
+    club ClubCourse[]
+
+    // Course To Category
+    categories CourseCategories[]
 
     isDeleted Boolean @default(false)
 
@@ -54,6 +87,8 @@ model CourseLessons {
 
     sequenceNumber Int
     isCompleted    Boolean @default(false)
+    isPublished    Boolean @default(false)
+    isFree         Boolean @default(false)
 
     //  Lessons To Course
     courseId String?
@@ -75,6 +110,7 @@ model LessonContents {
     resourceLink   String
     sequenceNumber Int
     isCompleted    Boolean  @default(false)
+    isFree         Boolean  @default(false)
 
     //  Lessons To Course
     courseLessonId String?
@@ -84,6 +120,24 @@ model LessonContents {
     updatedAt DateTime @updatedAt
 
     @@unique([courseLessonId, sequenceNumber])
+}
+
+model CourseCategories {
+    id       String               @id @default(cuid())
+    category CourseCategoriesEnum @default(All)
+
+    // Relations
+
+    // Categories to Course
+    course Course[]
+
+    // Categories to ClubCourses
+    clubCourses ClubCourse[]
+
+    isDeleted Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum UserRoles {
@@ -101,4 +155,12 @@ enum Contents {
     Video
     Audio
     PDF
+}
+
+enum CourseCategoriesEnum {
+    All
+    IT
+    Frontend
+    Backend
+    Fullstack
 }
