@@ -124,7 +124,7 @@ model LessonContents {
 
 model CourseCategories {
     id       String               @id @default(cuid())
-    category CourseCategoriesEnum @default(All)
+    category CourseCategoriesEnum @unique
 
     // Relations
 
@@ -162,5 +162,4 @@ enum CourseCategoriesEnum {
     IT
     Frontend
     Backend
-    Fullstack
 }

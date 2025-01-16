@@ -1,16 +1,10 @@
 const authHelper = require("../helper/functions/authHelpers");
 const { getUserByEmailId } = require("../services/user.service");
 
+/* Login Users */
 exports.postUserLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) {
-            return next({
-                statusCode: 400,
-                message: `Please Send Proper Data With Proper Keys. (Required fields with keys -  email, password)`,
-            });
-        }
 
         let isUserExist = await getUserByEmailId({ email, showPassword: true });
 
@@ -20,7 +14,6 @@ exports.postUserLogin = async (req, res, next) => {
                 message: `Incorrect username!`,
             });
         }
-
 
         let validatePassword = await authHelper.validatePassword(
             password,
