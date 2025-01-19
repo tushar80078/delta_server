@@ -2,8 +2,6 @@ const validate = ({ bodySchema, paramsSchema, querySchema }) => (req, res, next)
     try {
         const errors = {};
 
-        console.log('req.body', req.body)
-
         if (bodySchema) {
             try {
                 bodySchema.parse(req.body);

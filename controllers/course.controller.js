@@ -5,18 +5,13 @@ const { getCourseByName, createCourse } = require("../services/course.service");
 /* Create Course */
 exports.postCreateCourse = async (req, res, next) => {
     try {
-        const payloadData = { ...req.body, isFree: req.body.isFree === 'true', categories: JSON.parse(req.body.categories) };
+        const payloadData = {
+            ...req.body,
+            isFree: req.body.isFree === 'true',
+            categories: JSON.parse(req.body.categories),
+            courseFees: parseFloat(req.body.courseFees)
+        };
         const files = req.file;
-
-        // const isCourseExistWithGivenName = await getCourseByName({ name: payloadData.courseName });
-
-        // if (isCourseExistWithGivenName) {
-        //     return next({
-        //         statusCode: 409,
-        //         message: `Course name already exists. Please enter another one.`,
-        //     });
-        // }
-
         // TODO:Upload thumnailimage and add to create course option
 
         const createCourseResponse = await createCourse({ ...payloadData, tokenData: undefined });

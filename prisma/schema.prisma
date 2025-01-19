@@ -61,6 +61,7 @@ model Course {
     thumbnailImage    String?
     isPublished       Boolean @default(false)
     isFree            Boolean @default(false)
+    courseFees        Float   @default(0.00)
 
     // Relation
 
@@ -123,8 +124,8 @@ model LessonContents {
 }
 
 model CourseCategories {
-    id       String               @id @default(cuid())
-    category CourseCategoriesEnum @unique
+    id       String @id @default(cuid())
+    category String @unique
 
     // Relations
 
