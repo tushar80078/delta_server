@@ -5,6 +5,6 @@ module.exports = {
 
     //--------------------- JWT Auth Key -----------------
     auth: {
-        secret: "our-secret-key",
+        secret: process.env.JWT_SECRETE_KEY,
     },
 }
