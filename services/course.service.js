@@ -27,10 +27,22 @@ const createCourse = async (data) => {
     return createCourseResponse;
 }
 
+/* Get course by id */
+
+const getCourseById = async ({ courseId }) => {
+    const getCourseResponse = await db.course.findFirst({
+        where: {
+            id: courseId
+        }
+    })
+
+    return getCourseResponse;
+}
 
 
 
 module.exports = {
     getCourseByName,
-    createCourse
+    createCourse,
+    getCourseById
 }

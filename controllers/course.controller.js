@@ -1,6 +1,6 @@
 
 const db = require("../lib/db");
-const { getCourseByName, createCourse } = require("../services/course.service");
+const { getCourseById, createCourse } = require("../services/course.service");
 
 /* Create Course */
 exports.postCreateCourse = async (req, res, next) => {
@@ -95,3 +95,21 @@ exports.getAllCourses = async (req, res, next) => {
         return next(error);
     }
 };
+
+/* Get course by id */
+exports.getCourseById = async (req, res, next) => {
+    try {
+        const { courseId } = req.params;
+
+        const getCourseResponse = await getCourseById({ courseId });
+
+        return res.status(200).send({
+            success: true,
+            msg: 'Course fetched successfully!',
+            data: getCourseResponse,
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}

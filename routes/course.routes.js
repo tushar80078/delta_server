@@ -9,7 +9,7 @@ const tokenValidation = require("../helper/middlewares/authMiddleware");
 const validate = require("../helper/middlewares/validateMiddleware");
 
 /* Schema */
-const { createCourseSchema, getCourseSchema } = require("../lib/validators");
+const { course: { createCourseSchema, getCourseSchema, getCourseByID } } = require("../lib/validators");
 
 /* Multer Middleware for handling form data */
 const multer = require('multer');
@@ -25,6 +25,8 @@ router.post(
 );
 
 router.post("/getCourses", tokenValidation, validate({ bodySchema: getCourseSchema }), courseController.getAllCourses);
+
+router.get("/:courseId", tokenValidation, validate({ paramsSchema: getCourseByID }), courseController.getCourseById);
 
 
 module.exports = router;
