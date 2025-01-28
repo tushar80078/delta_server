@@ -87,7 +87,6 @@ model CourseLessons {
     lessonName String
 
     sequenceNumber Int
-    isCompleted    Boolean @default(false)
     isPublished    Boolean @default(false)
     isFree         Boolean @default(false)
 
