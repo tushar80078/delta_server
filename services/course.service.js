@@ -1,5 +1,17 @@
 const db = require("../lib/db")
 
+
+/*Get All couses*/
+
+const getAllCourses=async()=>{
+    const allCourses=await db.course.findMany({
+        where:{
+            isDeleted:false
+        }
+    })
+    return allCourses
+}
+
 /* Get Course By Name */
 const getCourseByName = async ({ name }) => {
     const isCourseExist = await db.course.findFirst({
@@ -10,6 +22,8 @@ const getCourseByName = async ({ name }) => {
 
     return isCourseExist;
 }
+
+
 
 /* Create Course */
 const createCourse = async (data) => {
@@ -44,5 +58,6 @@ const getCourseById = async ({ courseId }) => {
 module.exports = {
     getCourseByName,
     createCourse,
-    getCourseById
+    getCourseById,
+    getAllCourses
 }

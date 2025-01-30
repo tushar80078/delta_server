@@ -135,7 +135,7 @@ exports.getLessonByID = async (req, res, next) => {
         }
         return res.status(404).send({
             success: false,
-            messgae: "thid id lesson not present",
+            messgae: "this id lesson not present",
         })
 
 
