@@ -5,8 +5,8 @@ const router = express.Router();
 const authRoutes = require("./auth.routes");
 const courseRoutes = require("./course.routes");
 const categoryRoutes = require("./category.routes");
-const lessonRoutes=require("./lessons.routes")
-const categoryAndCourses=require("./categoeyAndCourses.routes")
+const lessonRoutes = require("./lessons.routes")
+const categoryAndCourses = require("./common.routes")
 
 
 // -------------------- Define Parent Routes ----------------------------------------
@@ -14,8 +14,8 @@ const categoryAndCourses=require("./categoeyAndCourses.routes")
 router.use("/auth", authRoutes);
 router.use("/course", courseRoutes);
 router.use("/category", categoryRoutes);
-router.use("/lessons",lessonRoutes)
-router.use("/category-courses",categoryAndCourses)
+router.use("/lessons", lessonRoutes)
+router.use("/category-courses", categoryAndCourses)
 
 
 
