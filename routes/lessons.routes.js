@@ -3,7 +3,7 @@ const router = express.Router()
 
 /* Controllers */
 
-const lessonController = require("../controllers/Lessons.controller")
+const lessonController = require("../controllers/lessons.controller")
 
 
 /* Middleware */
