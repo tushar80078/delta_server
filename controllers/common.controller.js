@@ -3,26 +3,29 @@ const { getAllCourseCategories } = require("../services/category.service");
 const { getAllCourses } = require("../services/course.service");
 
 
-exports.allCategoryAndCourses=async(req,res,next)=>{
+exports.allCategoryAndCourses = async (req, res, next) => {
     try {
-        const allCategories= await getAllCourseCategories()
-        const allCourses= await getAllCourses()
+        // TODO:Add logic for get top-5 categoreis
+        const allCategories = await getAllCourseCategories()
+        // TODO:Add logic for get top-5 courses
+        const allCourses = await getAllCourses()
 
         return res.status(200).send({
-            success:true,
-            categoryData:allCategories,
-            courseData:allCourses,
-            message:"Data fetched successfully"
-
+            success: true,
+            msg: "Data fetched successfully",
+            data: {
+                categoryData: allCategories,
+                courseData: allCourses,
+            },
         })
 
-        
+
     } catch (error) {
         throw next(error);
-        
-        
+
+
     }
 
-    
+
 
 }
