@@ -9,9 +9,19 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                 git branch: 'develop', 
-                    credentialsId: 'tushar2281', 
-                    url: 'https://github.com/tushar80078/delta_server.git'
+                script {
+                    // Clone the repository if not already present
+                    if (!fileExists('.git')) {
+                        sh 'git clone -b develop https://github.com/tushar80078/delta_server.git .'
+                    }
+
+                    // Fetch the latest changes
+                    sh '''
+                        git fetch origin develop
+                        git reset --hard origin/develop
+                        git clean -fd
+                    '''
+                }
             }
         }
 
