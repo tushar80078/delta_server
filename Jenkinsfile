@@ -17,19 +17,19 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                 sh 'node -v'
+                sh 'npm install'
             }
         }
 
-        // stage('Start Server') {
-        //     steps {
-        //         script {
-        //             // Stop any running process
-        //             sh "pkill -f 'node index.js' || echo 'No process found'"
-        //             // Start the backend server
-        //             sh 'nohup npm start > server.log 2>&1 &'
-        //         }
-        //     }
-        // }
+        stage('Start Server') {
+            steps {
+                script {
+                    // Stop any running process
+                    sh "pkill -f 'node index.js' || echo 'No process found'"
+                    // Start the backend server
+                    sh 'nohup npm start > server.log 2>&1 &'
+                }
+            }
+        }
     }
 }
