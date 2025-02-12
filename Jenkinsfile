@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODEJS_HOME = tool 'NodeJS' // Use Node.js from Jenkins
+        NODEJS_HOME = tool '23.7.0' // Use Node.js from Jenkins
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
     }
 
