@@ -9,7 +9,9 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'develop', url: 'https://github.com/your-username/your-repo.git'
+                 git branch: 'develop', 
+                    credentialsId: 'tushar2281', 
+                    url: 'https://github.com/tushar80078/delta_server.git'
             }
         }
 
