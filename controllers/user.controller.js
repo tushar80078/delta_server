@@ -1,5 +1,6 @@
 const authHelper = require("../helper/functions/authHelpers");
-const { getUserByEmailId } = require("../services/user.service");
+const { getUserByEmailId, postCreateUserAccountService } = require("../services/user.service");
+
 
 /* Login Users */
 exports.postUserLogin = async (req, res, next) => {
@@ -43,6 +44,36 @@ exports.postUserLogin = async (req, res, next) => {
                 err: "Incorrect Username or password",
             });
         }
+    } catch (error) {
+        return next(error);
+    }
+};
+
+/* Signup User */
+exports.postUserSignup = async (req, res, next) => {
+    try {
+        const { firstName, lastName, email, password, role, gender } = req.body;
+
+        let isUserExist = await getUserByEmailId({ email, showPassword: false });
+
+        if (isUserExist) {
+            return next({
+                statusCode: 409,
+                message: `User already registered with given name. Please enter another Email.`,
+            });
+        }
+
+        const hashPassword = await authHelper.hashPassword(password);
+
+        const accountResponse = await postCreateUserAccountService({ firstName, lastName, email, password: hashPassword, role, gender });
+
+        return res.status(200).json({
+            success: true,
+            msg: 'Account Created Successfully!',
+            data: accountResponse
+        })
+
+
     } catch (error) {
         return next(error);
     }

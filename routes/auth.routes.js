@@ -10,10 +10,12 @@ const tokenValidation = require(`../helper/middlewares/authMiddleware`);
 const validate = require("../helper/middlewares/validateMiddleware");
 
 /* Schema */
-const { loginSchema } = require("../lib/validators");
+const { auth } = require("../lib/validators");
 
 /* Routes */
-router.post("/login", validate({ bodySchema: loginSchema }), userController.postUserLogin);
+router.post("/login", validate({ bodySchema: auth.loginSchema }), userController.postUserLogin);
+
+router.post("/signup", validate({ bodySchema: auth.signUpSchema }), userController.postUserSignup);
 
 
 module.exports = router;

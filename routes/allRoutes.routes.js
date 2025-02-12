@@ -15,7 +15,8 @@ router.use("/auth", authRoutes);
 router.use("/course", courseRoutes);
 router.use("/category", categoryRoutes);
 router.use("/lessons", lessonRoutes)
-router.use("/category-courses", categoryAndCourses)
+router.use("/common", categoryAndCourses)
+router.use("/students", categoryAndCourses)
 
 
 
