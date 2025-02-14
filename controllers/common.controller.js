@@ -22,10 +22,27 @@ exports.allCategoryAndCourses = async (req, res, next) => {
 
     } catch (error) {
         throw next(error);
-
-
     }
+}
 
+exports.getCourById = async (req, res, next) => {
+    try {
+        const { courseId } = req.params;
 
+        const getCourseResponse = await db.course.findFirst({
+            where: {
+                id: courseId,
+                isDeleted: false,
+            }
+        })
 
+        return res.status(200).send({
+            success: true,
+            msg: "Course fetched successfully",
+            data: getCourseResponse,
+        })
+
+    } catch (error) {
+        throw next(error);
+    }
 }

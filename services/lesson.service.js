@@ -33,7 +33,7 @@ const createLesson = async (data) => {
 const getLessonById = async ({ lessonId }) => {
     const getlessonResponse = await db.courseLessons.findFirst({
         where: {
-            id: lessonId
+            id: lessonId,
         }
     })
 

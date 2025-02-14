@@ -117,32 +117,29 @@ exports.getAllCourseLessonsByPagination = async (req, res, next) => {
 };
 
 
-//get lesson by id
+/* Get Lesson By Id */
 
 exports.getLessonByID = async (req, res, next) => {
     try {
-        const { lessonId } = req.params
+
+        const { lessonId } = req.params;
 
         const getLessonResponse = await getLessonById({ lessonId })
 
-        if (getLessonResponse) {
-            return res.status(200).send({
-                success: true,
-                messgae: "Lesson Fetched Successfully",
-                data: getLessonResponse
-            })
-
+        if (!getLessonResponse) {
+            return next({
+                statusCode: 400,
+                message: `Chapter not found with given lesson id`,
+            });
         }
-        return res.status(404).send({
-            success: false,
-            messgae: "this id lesson not present",
+
+        return res.status(200).send({
+            success: true,
+            msg: "Chapter Details Fetched Successfully!",
+            data: getLessonResponse
         })
-
-
-
     } catch (error) {
         next(error)
-
     }
 }
 

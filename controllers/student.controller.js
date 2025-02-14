@@ -1,31 +1,77 @@
 const db = require("../lib/db");
-const { getAllCourseCategories } = require("../services/category.service");
-const { getAllCourses } = require("../services/course.service");
 
-
-exports.allCategoryAndCourses = async (req, res, next) => {
+// TODO:MOVE DB LOGIC TO SERVICE
+exports.addCourseToCart = async (req, res, next) => {
     try {
-        // TODO:Add logic for get top-5 categoreis
-        const allCategories = await getAllCourseCategories()
-        // TODO:Add logic for get top-5 courses
-        const allCourses = await getAllCourses()
+        const { userId, courseId } = req.body;
 
-        return res.status(200).send({
-            success: true,
-            msg: "Data fetched successfully",
-            data: {
-                categoryData: allCategories,
-                courseData: allCourses,
+        // Check if the course is already in the user's cart
+        const isCourseAlreadyInCart = await db.user.findFirst({
+            where: {
+                id: userId,
+                cartCourses: {
+                    some: { id: courseId },
+                },
             },
-        })
+            include: {
+                cartCourses: true
+            }
+        });
 
+        if (isCourseAlreadyInCart) {
+            return res.status(200).json({
+                success: true,
+                msg: "Course already added to cart",
+                data: isCourseAlreadyInCart
+            });
+        }
+
+        // Add course to the user's cart
+        const response = await db.user.update({
+            where: { id: userId },
+            data: {
+                cartCourses: {
+                    connect: { id: courseId }, // Connect the course to cartCourses
+                },
+            },
+            include: {
+                cartCourses: true
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            msg: "Course added to cart successfully",
+            data: response
+        });
 
     } catch (error) {
-        throw next(error);
-
-
+        next(error);
     }
+};
+
+exports.getCartCoursesOfUser = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
 
 
+        // Add course to the user's cart
+        const response = await db.user.findFirst({
+            where: {
+                id: userId
+            },
+            include: {
+                cartCourses: true
+            }
+        });
 
-}
+        return res.status(200).json({
+            success: true,
+            msg: "Cart Courses Fetched Successfully",
+            data: response
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};

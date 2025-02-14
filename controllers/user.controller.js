@@ -67,10 +67,22 @@ exports.postUserSignup = async (req, res, next) => {
 
         const accountResponse = await postCreateUserAccountService({ firstName, lastName, email, password: hashPassword, role, gender });
 
+
+        const tokenObject = {
+            id: accountResponse.id,
+            roleName: accountResponse.role,
+            email: accountResponse.email
+        };
+
+        const jwtToken = await authHelper.createToken(tokenObject);
+
         return res.status(200).json({
             success: true,
             msg: 'Account Created Successfully!',
-            data: accountResponse
+            data: {
+                token: jwtToken,
+                userData: accountResponse,
+            },
         })
 
 

@@ -8,5 +8,7 @@ const commonController = require(`../controllers/common.controller`);
 /* Routes */
 router.get("/top-category-courses", commonController.allCategoryAndCourses);
 
+router.get("/course/:courseId", commonController.getCourById);
+
 
 module.exports = router;

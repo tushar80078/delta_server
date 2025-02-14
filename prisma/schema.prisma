@@ -24,6 +24,8 @@ model User {
 
     clubCourses ClubCourse[]
 
+    cartCourses Course[] @relation("CartCourses") // Many-to-many relation with Course
+
     isDeleted Boolean @default(false)
 
     createdAt DateTime @default(now())
@@ -75,6 +77,8 @@ model Course {
 
     // Course To Category
     categories CourseCategories[]
+
+    cartUsers User[] @relation("CartCourses") // Many-to-many relation with User
 
     isDeleted Boolean @default(false)
 

@@ -7,6 +7,7 @@ const courseRoutes = require("./course.routes");
 const categoryRoutes = require("./category.routes");
 const lessonRoutes = require("./lessons.routes")
 const categoryAndCourses = require("./common.routes")
+const studentRoutes = require("./student.routes")
 
 
 // -------------------- Define Parent Routes ----------------------------------------
@@ -16,7 +17,7 @@ router.use("/course", courseRoutes);
 router.use("/category", categoryRoutes);
 router.use("/lessons", lessonRoutes)
 router.use("/common", categoryAndCourses)
-router.use("/students", categoryAndCourses)
+router.use("/students", studentRoutes)
 
 
 

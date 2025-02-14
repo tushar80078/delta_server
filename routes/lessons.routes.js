@@ -16,9 +16,9 @@ const validate = require("../helper/middlewares/validateMiddleware")
 const { lesson } = require("../lib/validators")
 
 /*Routes */
-router.post("/", validate({ bodySchema: lesson.createCourseLessonSchema }), lessonController.postCreateLesson)
+router.post("/", tokenValidation, validate({ bodySchema: lesson.createCourseLessonSchema }), lessonController.postCreateLesson)
 
-router.post("/getLessons", validate({ bodySchema: lesson.getCourseLessonsByPagination }), lessonController.getAllCourseLessonsByPagination)
+router.post("/getLessons", tokenValidation, validate({ bodySchema: lesson.getCourseLessonsByPagination }), lessonController.getAllCourseLessonsByPagination)
 
 router.get("/:lessonId", tokenValidation, validate({ paramsSchema: lesson.getLessonByID }), lessonController.getLessonByID)
 
