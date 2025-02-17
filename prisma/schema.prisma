@@ -145,8 +145,8 @@ model CourseCategories {
 }
 
 enum UserRoles {
-    CourseUser
-    Admin
+    Student
+    Teacher
 }
 
 enum Genders {
