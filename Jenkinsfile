@@ -25,19 +25,19 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         sh 'npm install'
+        //     }
+        // }
 
-        stage('Start Server') {
+        stage('Restart Server with PM2') {
             steps {
                 script {
-                    // Stop any running process
-                    sh "pkill -f 'node index.js' || echo 'No process found'"
-                    // Start the backend server
-                    sh 'nohup npm start > server.log 2>&1 &'
+                    sh '''
+                        pm2 restart npm || pm2 start npm --name "npm" -- start
+                        pm2 save
+                    '''
                 }
             }
         }
