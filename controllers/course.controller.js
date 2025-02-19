@@ -9,7 +9,7 @@ exports.postCreateCourse = async (req, res, next) => {
             ...req.body,
             isFree: req.body.isFree === 'true',
             categories: JSON.parse(req.body.categories),
-            courseFees: parseFloat(req.body.courseFees)
+            courseFees: parseFloat(req.body.courseFees),
         };
         const files = req.file;
         // TODO:Upload thumnailimage and add to create course option
@@ -32,6 +32,7 @@ exports.getAllCourses = async (req, res, next) => {
     try {
 
         const { page = 1, pageSize = 10, category = "All" } = req.body;
+        const { teacherId } = req.params;
 
         if (page <= 0 || pageSize <= 0) {
             return next({
@@ -53,6 +54,7 @@ exports.getAllCourses = async (req, res, next) => {
                         },
                     },
                 }),
+                createdById: teacherId
             },
             include: {
                 categories: true
@@ -74,6 +76,7 @@ exports.getAllCourses = async (req, res, next) => {
                         },
                     },
                 }),
+                createdById: teacherId
             },
         });
 
@@ -99,7 +102,7 @@ exports.getAllCourses = async (req, res, next) => {
 /* Get course by id */
 exports.getCourseById = async (req, res, next) => {
     try {
-        const { courseId } = req.params;
+        const { courseId, teacherId } = req.params;
 
         const getCourseResponse = await getCourseById({ courseId });
 

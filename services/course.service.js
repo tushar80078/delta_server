@@ -3,10 +3,10 @@ const db = require("../lib/db")
 
 /*Get All couses*/
 
-const getAllCourses=async()=>{
-    const allCourses=await db.course.findMany({
-        where:{
-            isDeleted:false
+const getAllCourses = async () => {
+    const allCourses = await db.course.findMany({
+        where: {
+            isDeleted: false
         }
     })
     return allCourses
@@ -30,13 +30,17 @@ const createCourse = async (data) => {
     const createCourseResponse = await db.course.create({
         data: {
             ...data,
+
             categories: {
                 connect: data.categories.map((category) => ({
                     category: category.value,
                 })),
             },
+
         }
     })
+
+
 
     return createCourseResponse;
 }
@@ -46,7 +50,9 @@ const createCourse = async (data) => {
 const getCourseById = async ({ courseId }) => {
     const getCourseResponse = await db.course.findFirst({
         where: {
-            id: courseId
+            id: courseId,
+            createdById: teacherId,
+            isDeleted: false
         }
     })
 

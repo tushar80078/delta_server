@@ -3,6 +3,7 @@ const db = require("../lib/db")
 
 /* Get user by email id */
 const getUserByEmailId = async ({ email, showPassword = false }) => {
+
     const userResponse = await db.user.findFirst({
         where: {
             email: email,
@@ -12,7 +13,30 @@ const getUserByEmailId = async ({ email, showPassword = false }) => {
             password: showPassword,
             email: true,
             gender: true,
-            courses: true,
+            cartCourses: true,
+            enrolledClubCourses: {
+                where: {
+                    isDeleted: false,
+                    isPublished: true,
+                    enrolledUsers: {
+                        some: {
+                            email: email
+                        }
+                    }
+                }
+            },
+            enrolledCourses: {
+                where: {
+                    isDeleted: false,
+                    isPublished: true,
+                    enrolledUsers: {
+                        some: {
+                            email: email
+                        }
+                    }
+                }
+            },
+            createdCourses: true,
             createdAt: true,
             firstName: true,
             id: true,
@@ -22,6 +46,16 @@ const getUserByEmailId = async ({ email, showPassword = false }) => {
             updatedAt: true
         }
     });
+
+
+
+    if (userResponse?.role === "Teacher") {
+        delete userResponse.enrolledCourses;
+        delete userResponse.enrolledClubCourses
+        delete userResponse.cartCourses
+    } else if (userResponse?.role === "Student") {
+        delete userResponse.createdCourses;
+    }
 
     return userResponse;
 };
@@ -42,7 +76,6 @@ const postCreateUserAccountService = async ({ firstName, lastName, email, passwo
             password: false,
             email: true,
             gender: true,
-            courses: true,
             createdAt: true,
             firstName: true,
             id: true,

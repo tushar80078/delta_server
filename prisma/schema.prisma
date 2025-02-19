@@ -7,6 +7,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+/// **User model**: Stores details of all users, including Admins, Students, and Teachers
 model User {
     id String @id @default(cuid())
 
@@ -18,13 +19,19 @@ model User {
     gender       Genders
     role         UserRoles
 
-    // All Relations
+    // **Relations**
 
-    courses Course[]
+    /// Courses enrolled by the student (Many-to-Many with Course)
+    enrolledCourses Course[] @relation("StudentEnrolledCourses")
 
-    clubCourses ClubCourse[]
+    /// Club courses enrolled by the student (Many-to-Many with ClubCourse)
+    enrolledClubCourses ClubCourse[] @relation("StudentEnrolledClubCourses")
 
-    cartCourses Course[] @relation("CartCourses") // Many-to-many relation with Course
+    /// Courses added to the cart (Many-to-Many with Course)
+    cartCourses Course[] @relation("CartCourses")
+
+    /// Courses created by the teacher (One-to-Many with Course)
+    createdCourses Course[] @relation("TeacherCreatedCourses")
 
     isDeleted Boolean @default(false)
 
@@ -32,6 +39,7 @@ model User {
     updatedAt DateTime @updatedAt
 }
 
+/// **ClubCourse model**: Represents special bundled courses available in a club-like structure
 model ClubCourse {
     id                    String  @id @default(cuid())
     clubCourseName        String
@@ -40,14 +48,16 @@ model ClubCourse {
     isPublished           Boolean @default(false)
     isFree                Boolean @default(false)
 
-    //  Club Course To Course
-    courses Course[]
+    // **Relations**
 
-    // Club Course To User
-    users User[]
+    /// Courses associated with this club course (Many-to-Many with Course)
+    courses Course[] @relation("ClubCourseCourses")
 
-    // ClubCourses to categories
-    categories CourseCategories[]
+    /// Users enrolled in this club course (Many-to-Many with User)
+    enrolledUsers User[] @relation("StudentEnrolledClubCourses")
+
+    /// Categories assigned to this club course (Many-to-Many with CourseCategories)
+    categories CourseCategories[] @relation("ClubCourseCategories")
 
     isDeleted Boolean @default(false)
 
@@ -55,6 +65,7 @@ model ClubCourse {
     updatedAt DateTime @updatedAt
 }
 
+/// **Course model**: Represents an individual course with lessons and categories
 model Course {
     id                String  @id @default(cuid())
     courseName        String
@@ -65,20 +76,26 @@ model Course {
     isFree            Boolean @default(false)
     courseFees        Float   @default(0.00)
 
-    // Relation
+    // **Relations**
 
-    courseUsers User[]
+    /// Students enrolled in this course (Many-to-Many with User)
+    enrolledUsers User[] @relation("StudentEnrolledCourses")
 
-    // Course To Lessons
-    courseLessons CourseLessons[]
+    /// Lessons associated with this course (One-to-Many with CourseLessons)
+    lessons CourseLessons[] @relation("CourseLessons")
 
-    // Course To Club Course
-    club ClubCourse[]
+    /// Club courses this course belongs to (Many-to-Many with ClubCourse)
+    clubCourses ClubCourse[] @relation("ClubCourseCourses")
 
-    // Course To Category
-    categories CourseCategories[]
+    /// Categories assigned to this course (Many-to-Many with CourseCategories)
+    categories CourseCategories[] @relation("CourseCategories")
 
-    cartUsers User[] @relation("CartCourses") // Many-to-many relation with User
+    /// Users who have added this course to their cart (Many-to-Many with User)
+    cartUsers User[] @relation("CartCourses")
+
+    /// Teacher who created this course (One-to-Many with User)
+    createdById String
+    createdBy   User   @relation("TeacherCreatedCourses", fields: [createdById], references: [id])
 
     isDeleted Boolean @default(false)
 
@@ -86,20 +103,22 @@ model Course {
     updatedAt DateTime @updatedAt
 }
 
+/// **CourseLessons model**: Represents lessons within a course
 model CourseLessons {
-    id         String @id @default(cuid())
-    lessonName String
-
+    id             String  @id @default(cuid())
+    lessonName     String
     sequenceNumber Int
     isPublished    Boolean @default(false)
     isFree         Boolean @default(false)
 
-    //  Lessons To Course
-    courseId String?
-    Course   Course? @relation(fields: [courseId], references: [id])
+    // **Relations**
 
-    //  CourseLessons To LessonContents
-    LessonContents LessonContents[]
+    /// Course to which this lesson belongs (Many-to-One with Course)
+    courseId String?
+    course   Course? @relation("CourseLessons", fields: [courseId], references: [id])
+
+    /// Lesson contents (One-to-Many with LessonContents)
+    lessonContents LessonContents[] @relation("LessonContents")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -107,6 +126,7 @@ model CourseLessons {
     @@unique([courseId, sequenceNumber])
 }
 
+/// **LessonContents model**: Represents individual content items within a lesson
 model LessonContents {
     id             String   @id @default(cuid())
     contentName    String
@@ -116,9 +136,11 @@ model LessonContents {
     isCompleted    Boolean  @default(false)
     isFree         Boolean  @default(false)
 
-    //  Lessons To Course
+    // **Relations**
+
+    /// Lesson this content belongs to (Many-to-One with CourseLessons)
     courseLessonId String?
-    CourseLessons  CourseLessons? @relation(fields: [courseLessonId], references: [id])
+    lesson         CourseLessons? @relation("LessonContents", fields: [courseLessonId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -126,17 +148,18 @@ model LessonContents {
     @@unique([courseLessonId, sequenceNumber])
 }
 
+/// **CourseCategories model**: Represents categories that can be assigned to courses and club courses
 model CourseCategories {
     id       String @id @default(cuid())
     category String @unique
 
-    // Relations
+    // **Relations**
 
-    // Categories to Course
-    course Course[]
+    /// Courses under this category (Many-to-Many with Course)
+    courses Course[] @relation("CourseCategories")
 
-    // Categories to ClubCourses
-    clubCourses ClubCourse[]
+    /// Club courses under this category (Many-to-Many with ClubCourse)
+    clubCourses ClubCourse[] @relation("ClubCourseCategories")
 
     isDeleted Boolean @default(false)
 
@@ -144,7 +167,9 @@ model CourseCategories {
     updatedAt DateTime @updatedAt
 }
 
+/// **Enums**
 enum UserRoles {
+    Admin
     Student
     Teacher
 }

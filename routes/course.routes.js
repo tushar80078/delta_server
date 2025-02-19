@@ -24,9 +24,9 @@ router.post(
     courseController.postCreateCourse
 );
 
-router.post("/getCourses", tokenValidation, validate({ bodySchema: getCourseSchema }), courseController.getAllCourses);
+router.post("/getCourses/:teacherId", tokenValidation, validate({ bodySchema: getCourseSchema }), courseController.getAllCourses);
 
-router.get("/:courseId", tokenValidation, validate({ paramsSchema: getCourseByID }), courseController.getCourseById);
+router.get("/:teacherId/:courseId", tokenValidation, validate({ paramsSchema: getCourseByID }), courseController.getCourseById);
 
 
 module.exports = router;
