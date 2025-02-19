@@ -35,8 +35,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        pm2 restart delta
-                        pm2 save
+                       pm2 -v
+
                     '''
                 }
             }
