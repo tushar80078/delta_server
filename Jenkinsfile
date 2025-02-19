@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        pm2 restart delta || pm2 start npm --name "delta" -- start
+                        pm2 restart delta
                         pm2 save
                     '''
                 }
