@@ -8,6 +8,7 @@ const app = require("./app");
 const server = http.createServer(app);
 
 // Start listening on the configured port
+
 server.listen(config.PORT, (err) => {
     if (!err) {
         console.log(`Server started on port : ${config.PORT}\nCtrl + Click to start http://localhost:${config.PORT}/test`);
