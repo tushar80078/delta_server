@@ -34,7 +34,7 @@ pipeline {
         stage('Restart Server with PM2') {
             steps {
                  script {
-           sh 'sudo -S /home/ubuntu/.nvm/versions/node/v18.16.0/bin/pm2 restart delta < /dev/null'
+           sh 'sudo -S /home/ubuntu/.nvm/versions/node/v22.13.1/bin/pm2 restart delta < /dev/null'
         }
             }
         }
