@@ -19,19 +19,23 @@ model User {
     gender       Genders
     role         UserRoles
 
-    // **Relations**
-
-    /// Courses enrolled by the student (Many-to-Many with Course)
+    // Courses enrolled by the student
     enrolledCourses Course[] @relation("StudentEnrolledCourses")
 
-    /// Club courses enrolled by the student (Many-to-Many with ClubCourse)
+    // Club courses enrolled by the student
     enrolledClubCourses ClubCourse[] @relation("StudentEnrolledClubCourses")
 
-    /// Courses added to the cart (Many-to-Many with Course)
+    // Courses added to the cart
     cartCourses Course[] @relation("CartCourses")
 
-    /// Courses created by the teacher (One-to-Many with Course)
+    // Courses created by the teacher
     createdCourses Course[] @relation("TeacherCreatedCourses")
+
+    // Relation with Transaction (one-to-many)
+    transactions Transaction[] @relation("UserToTransaction")
+
+    // Relation with TransactionCourse (one-to-many)
+    transactionCourses TransactionCourse[] @relation("UserToTransactionCourse")
 
     isDeleted Boolean @default(false)
 
@@ -76,24 +80,25 @@ model Course {
     isFree            Boolean @default(false)
     courseFees        Float   @default(0.00)
 
-    // **Relations**
+    // Relation with TransactionCourse (one-to-many)
+    transactions TransactionCourse[] @relation("CourseToTransactionCourse")
 
-    /// Students enrolled in this course (Many-to-Many with User)
+    // Students enrolled in this course (Many-to-Many with User)
     enrolledUsers User[] @relation("StudentEnrolledCourses")
 
-    /// Lessons associated with this course (One-to-Many with CourseLessons)
+    // Lessons associated with this course
     lessons CourseLessons[] @relation("CourseLessons")
 
-    /// Club courses this course belongs to (Many-to-Many with ClubCourse)
+    // Club courses this course belongs to
     clubCourses ClubCourse[] @relation("ClubCourseCourses")
 
-    /// Categories assigned to this course (Many-to-Many with CourseCategories)
+    // Categories assigned to this course
     categories CourseCategories[] @relation("CourseCategories")
 
-    /// Users who have added this course to their cart (Many-to-Many with User)
+    // Users who have added this course to their cart
     cartUsers User[] @relation("CartCourses")
 
-    /// Teacher who created this course (One-to-Many with User)
+    // Teacher who created this course
     createdById String
     createdBy   User   @relation("TeacherCreatedCourses", fields: [createdById], references: [id])
 
@@ -165,6 +170,43 @@ model CourseCategories {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+    id String @id @default(cuid())
+
+    userId String
+    user   User   @relation("UserToTransaction", fields: [userId], references: [id])
+
+    transactionId String @unique
+
+    amount Float
+    status String @default("Pending") // Pending, Paid, Failed
+
+    // Relation with TransactionCourse (one-to-many)
+    transactionCourses TransactionCourse[] @relation("TransactionToTransactionCourse")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model TransactionCourse {
+    id String @id @default(cuid())
+
+    transactionId String
+    transaction   Transaction @relation("TransactionToTransactionCourse", fields: [transactionId], references: [id], onDelete: Cascade)
+
+    courseId String
+    course   Course @relation("CourseToTransactionCourse", fields: [courseId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation("UserToTransactionCourse", fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Ensure a user cannot purchase the same course more than once
+    @@unique([userId, courseId])
 }
 
 /// **Enums**

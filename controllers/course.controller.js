@@ -104,7 +104,7 @@ exports.getCourseById = async (req, res, next) => {
     try {
         const { courseId, teacherId } = req.params;
 
-        const getCourseResponse = await getCourseById({ courseId });
+        const getCourseResponse = await getCourseById({ courseId, teacherId });
 
         return res.status(200).send({
             success: true,

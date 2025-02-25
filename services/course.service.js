@@ -47,7 +47,7 @@ const createCourse = async (data) => {
 
 /* Get course by id */
 
-const getCourseById = async ({ courseId }) => {
+const getCourseById = async ({ courseId, teacherId }) => {
     const getCourseResponse = await db.course.findFirst({
         where: {
             id: courseId,
